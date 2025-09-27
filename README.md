@@ -62,8 +62,6 @@ Emoji Catcher ek simple aur fun frontend game hai jo HTML, CSS aur JavaScript ka
 
 ## Credits
 
-## Credits
-
 Game, UI aur logic khud likha gaya hai.  
 Developed using HTML, CSS, and JavaScript.  
 Emoji icons Unicode ka use karke dikhaye gaye hain.  
