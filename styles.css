@@ -1,0 +1,328 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html,
+body {
+  height: 100%;
+  font-family: Inter, Segoe UI, Arial, sans-serif;
+  background: linear-gradient(180deg, #0a0f16 0%, #0a1320 60%, #08101c 100%);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.wrap {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+canvas#gameCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+#hud .hidden {
+  display: none;
+}
+#hud {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 12px;
+  color: #0b1b2b;
+  font-weight: 700;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+  z-index: 4;
+}
+#hud > div {
+  background: rgba(20, 30, 45, 0.6);
+  color: #e6f4ff;
+  backdrop-filter: saturate(120%) blur(2px);
+  padding: 6px 10px;
+  border-radius: 12px;
+  box-shadow: 0 2px 18px rgba(0, 180, 255, 0.18),
+    inset 0 0 0 1px rgba(0, 180, 255, 0.25);
+}
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(5, 10, 18, 0.55);
+  color: #cfe9ff;
+  backdrop-filter: blur(4px);
+  padding: 24px;
+  z-index: 5;
+}
+.overlay.hidden {
+  display: none;
+}
+.overlay h1 {
+  font-size: 42px;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+}
+.overlay h2 {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+.overlay p {
+  opacity: 0.95;
+  font-size: 18px;
+  max-width: 720px;
+  text-align: center;
+  line-height: 1.5;
+}
+.overlay button {
+  padding: 12px 22px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(180deg, #00e0ff, #00b3ff);
+  font-weight: 800;
+  color: #001018;
+  cursor: pointer;
+  box-shadow: 0 0 24px rgba(0, 200, 255, 0.45);
+  transition: transform 0.08s ease, filter 0.15s ease;
+}
+.overlay button:hover {
+  filter: brightness(1.03);
+}
+.overlay button:active {
+  transform: translateY(1px);
+}
+.small {
+  font-size: 13px;
+  margin-top: 10px;
+  color: #fff;
+  opacity: 0.9;
+}
+#menu p,
+#gameover p {
+  margin: 6px 0;
+}
+button.linkish {
+  background: transparent;
+  border: none;
+  color: #a9e6ff;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+button.linkish:hover {
+  background: rgba(255, 255, 255, 0.6);
+}
+#streakBox {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.7);
+  padding: 6px 10px;
+  border-radius: 12px;
+  font-weight: 800;
+  color: #0b1b2b;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* New High badge */
+.badge {
+  display: inline-block;
+  background: linear-gradient(180deg, #ffe066, #ffd43b);
+  color: #5c4100;
+  font-weight: 900;
+  padding: 8px 14px;
+  border-radius: 999px;
+  box-shadow: 0 6px 24px rgba(255, 208, 0, 0.35),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.6);
+  margin-bottom: 8px;
+  transform: scale(0.6);
+  opacity: 0;
+  transition: transform 0.35s cubic-bezier(0.2, 1.25, 0.2, 1),
+    opacity 0.25s ease;
+}
+.badge.show {
+  transform: scale(1);
+  opacity: 1;
+}
+.badge.hidden {
+  display: none;
+}
+
+/* HUD meters */
+#goalBox,
+#dailyBox {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 120px;
+}
+#goalText,
+#dailyText {
+  font-size: 12px;
+  opacity: 0.95;
+}
+.meter {
+  position: relative;
+  width: 120px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+}
+.meter .fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #00e0ff, #00b3ff);
+  box-shadow: 0 0 12px rgba(0, 200, 255, 0.35) inset;
+}
+
+.touchControls {
+  position: absolute;
+  bottom: 18px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 16px;
+  gap: 12px;
+}
+.touchControls.hidden {
+  display: none;
+}
+.touchControls button {
+  flex: 1;
+  padding: 14px 0;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #00e0ff, #00b3ff);
+  color: #001018;
+  font-weight: 900;
+  font-size: 18px;
+  box-shadow: 0 0 24px rgba(0, 200, 255, 0.35);
+}
+.shareBar {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+}
+
+/* Leaderboard styles */
+.leader-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.leader-list li {
+  background: #303043;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.08em;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+.leader-list li.gold {
+  background: linear-gradient(90deg, #ffe066, #fffbe6);
+}
+.leader-list li.silver {
+  background: linear-gradient(90deg, #e0e0e0, #f7f7fa);
+}
+.leader-list li.bronze {
+  background: linear-gradient(90deg, #ffd6a0, #fff3e6);
+}
+.leader-list .score {
+  font-weight: bold;
+  margin-right: 12px;
+}
+.leader-list .date {
+  font-size: 0.92em;
+  color: #888;
+}
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.6em;
+  color: #444;
+  cursor: pointer;
+  margin-left: 12px;
+  line-height: 1;
+  padding: 0 6px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+.close-btn:hover {
+  background: #eee;
+}
+
+@media (max-width: 768px) {
+  .overlay h1 {
+    font-size: 36px;
+  }
+  .overlay h2 {
+    font-size: 26px;
+  }
+  .overlay p {
+    font-size: 16px;
+    max-width: 90%;
+  }
+  #hud {
+    gap: 8px;
+  }
+  #hud > div {
+    padding: 4px 8px;
+    border-radius: 10px;
+  }
+  button.linkish {
+    padding: 4px 8px;
+  }
+}
+
+@media (max-width: 420px) {
+  .overlay h1 {
+    font-size: 32px;
+  }
+  .overlay h2 {
+    font-size: 22px;
+  }
+  .overlay p {
+    font-size: 15px;
+  }
+  .touchControls button {
+    font-size: 16px;
+    padding: 12px 0;
+  }
+}
+
+.toast {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+.toast.hidden {
+  display: none;
+}
+.shareBar {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+}

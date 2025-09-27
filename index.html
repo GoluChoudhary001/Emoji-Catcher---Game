@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Emoji Catcher - Prototype</title>
+  <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/128/18164/18164980.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="wrap">
+    <canvas id="gameCanvas" aria-label="Emoji catcher game"></canvas>
+
+    <!-- Improved HUD Bar -->
+    <div id="hud" class="hud-bar">
+      <div class="hud-left">
+        <div id="scoreBox">Score: <span id="score">0</span></div>
+        <div id="shieldBox" aria-label="Shields">🛡️ x<span id="shieldCount">0</span></div>
+        <div id="highBox">High: <span id="highScore">0</span></div>
+        <div id="streakBox" class="hidden">x<span id="mult">1</span></div>
+      </div>
+      <div class="hud-center">
+        <div id="goalBox">
+          <div id="goalText">Next: 50</div>
+          <div class="meter" aria-label="Next goal progress"><div class="fill" id="goalFill" style="width:0%"></div></div>
+        </div>
+        <div id="dailyBox">
+          <div id="dailyText">Daily: 0/50</div>
+          <div class="meter"><div class="fill" id="dailyFill" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div class="hud-right">
+        <button id="leaderBtn" class="linkish" aria-haspopup="dialog" aria-controls="leaderboard">🏆</button>
+        <button id="resetHighBtn" class="linkish" title="Reset High Score">♻️</button>
+        <button id="helpBtn" class="linkish" aria-haspopup="dialog" aria-controls="help">❓</button>
+        <button id="muteBtn" class="linkish" aria-pressed="false">🔊</button>
+        <button id="themeBtn" class="linkish" aria-pressed="false">🌓</button>
+        <button id="shareBtn" class="linkish" aria-label="Share game">🔗</button>
+      </div>
+    </div>
+
+    <!-- Overlays remain mostly same, just add class="dialog" for styling -->
+    <div id="menu" class="overlay dialog">
+      <h1>Emoji Catcher</h1>
+      <p>Catch the good emojis. Avoid bombs 💣</p>
+      <button id="startBtn">Play</button>
+      <p class="small">Use ◀ ▶ or touch to move</p>
+    </div>
+
+    <div id="gameover" class="overlay dialog hidden">
+      <h2>Game Over</h2>
+      <div id="newHighBadge" class="badge hidden" aria-live="polite">🏆 New High!</div>
+      <p id="finalScore">Score: 0</p>
+      <div style="display:flex; gap:10px; margin-top:8px; flex-wrap:wrap; justify-content:center;">
+        <button id="restartBtn">Play Again</button>
+        <button id="shareOverBtn">Share</button>
+      </div>
+    </div>
+
+    <div id="leaderboard" class="overlay dialog hidden" role="dialog" aria-modal="true" aria-labelledby="leaderTitle">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h2 id="leaderTitle" style="margin:0;">Leaderboard</h2>
+        <button id="closeLeaderBtn" class="close-btn" aria-label="Close leaderboard">&times;</button>
+      </div>
+      <p class="small" style="margin-bottom:12px;">Top runs on this device</p>
+      <ol id="leaderList" class="leader-list"></ol>
+    </div>
+
+    <div id="help" class="overlay dialog hidden" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+      <h2 id="helpTitle">How to Play</h2>
+      <p>Catch the good emojis, avoid the bad ones.</p>
+      <div style="margin:12px 0; background:rgba(255,255,255,0.2); padding:10px 14px; border-radius:12px;">
+        <p><strong>Good:</strong> 😃 🍕 ❤️ 🪙 🍩 ⭐ 🍎 🍪 → <strong>Right +1</strong></p>
+        <p><strong>Bad:</strong> 💣 ☠️ 🔥 ⚠️ → <strong>Wrong (game over)</strong></p>
+      </div>
+      <p class="small">Controls: ◀ ▶ to move, Drag on touch. P = Pause/Resume, Space = Start/Replay, M = Mute, Help = open this, Theme = Neon/Light, Share = share link.</p>
+      <button id="closeHelpBtn">Close</button>
+    </div>
+
+    <div id="pause" class="overlay dialog hidden">
+      <h2>Paused</h2>
+      <p>Press P or tap Resume to continue</p>
+      <button id="resumeBtn">Resume</button>
+    </div>
+
+    <div id="countdown" class="overlay dialog hidden">
+      <h1 id="countNum">3</h1>
+    </div>
+
+    <!-- Touch controls bottom center -->
+    <div id="touchControls" class="touchControls hidden">
+      <button id="leftBtn" aria-label="Move left">◀</button>
+      <button id="rightBtn" aria-label="Move right">▶</button>
+    </div>
+
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
